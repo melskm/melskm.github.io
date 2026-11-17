@@ -2,6 +2,12 @@
 
 React + Vite + Tailwind CSS v4. Dev-сервер: `npm run dev` (порт 5173).
 
+## Деплой
+
+Прод: GitHub Pages, https://melskm.github.io — репозиторий `melskm/melskm.github.io`, Pages публикует ветку `gh-pages` (собранный `dist`), исходники в ветке `main`. В `vite.config.js` стоит `base: '/'`.
+Обновление сайта: закоммитить изменения в `main`, затем `npm run build` и запушить содержимое `dist` в ветку `gh-pages` (в `dist/` отдельный git-репозиторий с remote origin). Если сборка Pages не стартует сама — POST на `https://api.github.com/repos/melskm/melskm.github.io/pages/builds`.
+`bot/` в репозиторий не коммитить (в `.gitignore`) — там токены Telegram и Kimi в открытом виде.
+
 ## Supabase
 
 Клиент: `src/lib/supabaseClient.js` (URL и publishable-ключ уже в файле).
