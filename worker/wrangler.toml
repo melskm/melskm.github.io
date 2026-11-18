@@ -1,0 +1,11 @@
+name = "kbzhu-bot"
+main = "src/worker.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+SUPABASE_URL = "https://yjdjydxhsdibzyvxbhsj.supabase.co"
+SUPABASE_KEY = "sb_publishable_9DXNbTciyBjV2CiORYIDdw_6KCzJTdu"
+
+[[kv_namespaces]]
+binding = "PENDING_MEALS"
+id = "34def4cee9404e0fb042aedc0c0097b3"
