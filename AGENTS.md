@@ -21,7 +21,11 @@ React + Vite + Tailwind CSS v4. Dev-сервер: `npm run dev` (порт 5173).
 
 ## Telegram-бот
 
-Код: `bot/bot.mjs` (@ccalkimi_bot). Запуск: `node bot/bot.mjs` (polling, работает пока жив процесс).
+Прод: Cloudflare Worker `kbzhu-bot` (@ccalkimi_bot), webhook на `https://kbzhu-bot.melskm.workers.dev/webhook` — работает 24/7, бесплатный тариф. Код: `worker/src/worker.js`, конфиг `worker/wrangler.toml`. Деплой: `cd worker && npx wrangler deploy` (логин через `npx wrangler login`).
+Секреты воркера (`npx wrangler secret put ИМЯ --name kbzhu-bot`): TELEGRAM_TOKEN, KIMI_API_KEY, WEBHOOK_SECRET (лежит в `worker/.webhook_secret`, не коммитить). KV-биндинг PENDING_MEALS: дедупликация update_id (24 ч) и маппинг сообщение→id записей для кнопок (7 дней).
+Время воркера — Europe/Moscow (в UTC не переводить обратно). Webhook привязан с `ip_address` (104.21.88.106), т.к. резолвер Telegram не резолвил workers.dev; если воркер переедет — перевыпустить setWebhook.
+Локальная polling-версия: `bot/bot.mjs` (НЕ коммитить — токены в коде). Пока установлен webhook, локальный запуск бесполезен: getUpdates вернёт 409.
+Логи воркера: `cd worker && npx wrangler tail`.
 Принимает текст или фото еды → считает КБЖУ через Kimi Code API (`https://api.kimi.ai/coding/v1`, модель `kimi-for-coding`, только `temperature: 1`) → пишет в `meals` → отвечает «Добавлено: …».
 Если на фото упаковка — КБЖУ берётся с этикетки (за 100 г) и пересчитывается на количество из текста пользователя («2 пакетика», «2 котлеты»); вес штуки вычисляется из веса нетто/числа штук на упаковке. Если модель прочитала штрихкод и продукт есть в Open Food Facts (`world.openfoodfacts.org/api/v2/product/{ean}.json`) — КБЖУ пересчитывается точно по базе, приоритет над этикеткой.
 Команда `/undo` — удаляет последнюю запись за сегодня; `/clear` — все записи за сегодня. Принимает фото и как картинку, и как файл-документ (документ не сжимается — этикетки читаются лучше). В ответе указывает основу расчёта (поле note из JSON модели, в базу не пишется).
